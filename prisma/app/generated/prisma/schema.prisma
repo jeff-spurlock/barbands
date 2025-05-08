@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              Int              @id @default(autoincrement())
+  email           String           @unique
+  name            String?
+  bandMemberships BandMember[]
+  venueStaffRoles VenueStaffRole[]
+}
+
+model Band {
+  id      Int          @id @default(autoincrement())
+  name    String
+  members BandMember[]
+}
+
+model Venue {
+  id       Int              @id @default(autoincrement())
+  name     String
+  address  String
+  address2 String?
+  city     String
+  state    String
+  zip      String
+  country  String
+  phone    String?
+  email    String
+  staff    VenueStaffRole[]
+}
+
+model BandMember {
+  id     Int  @id @default(autoincrement())
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+  band   Band @relation(fields: [bandId], references: [id])
+  bandId Int
+
+  @@unique([userId, bandId])
+}
+
+model VenueStaffRole {
+  id      Int    @id @default(autoincrement())
+  user    User   @relation(fields: [userId], references: [id])
+  userId  Int
+  venue   Venue  @relation(fields: [venueId], references: [id])
+  venueId Int
+  role    String
+
+  @@unique([userId, venueId])
+}
