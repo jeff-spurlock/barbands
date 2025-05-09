@@ -11,106 +11,139 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as BandsImport } from './routes/bands'
-import { Route as IndexImport } from './routes/index'
-import { Route as BandsCreateImport } from './routes/bands/create'
+import { Route as PathlessLayoutImport } from './routes/_pathlessLayout'
+import { Route as PathlessLayoutIndexImport } from './routes/_pathlessLayout/index'
+import { Route as PathlessLayoutBandsImport } from './routes/_pathlessLayout/bands'
+import { Route as PathlessLayoutBandsCreateImport } from './routes/_pathlessLayout/bands/create'
 
 // Create/Update Routes
 
-const BandsRoute = BandsImport.update({
-  id: '/bands',
-  path: '/bands',
+const PathlessLayoutRoute = PathlessLayoutImport.update({
+  id: '/_pathlessLayout',
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexRoute = IndexImport.update({
+const PathlessLayoutIndexRoute = PathlessLayoutIndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => PathlessLayoutRoute,
 } as any)
 
-const BandsCreateRoute = BandsCreateImport.update({
+const PathlessLayoutBandsRoute = PathlessLayoutBandsImport.update({
+  id: '/bands',
+  path: '/bands',
+  getParentRoute: () => PathlessLayoutRoute,
+} as any)
+
+const PathlessLayoutBandsCreateRoute = PathlessLayoutBandsCreateImport.update({
   id: '/create',
   path: '/create',
-  getParentRoute: () => BandsRoute,
+  getParentRoute: () => PathlessLayoutBandsRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
+    '/_pathlessLayout': {
+      id: '/_pathlessLayout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PathlessLayoutImport
       parentRoute: typeof rootRoute
     }
-    '/bands': {
-      id: '/bands'
+    '/_pathlessLayout/bands': {
+      id: '/_pathlessLayout/bands'
       path: '/bands'
       fullPath: '/bands'
-      preLoaderRoute: typeof BandsImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof PathlessLayoutBandsImport
+      parentRoute: typeof PathlessLayoutImport
     }
-    '/bands/create': {
-      id: '/bands/create'
+    '/_pathlessLayout/': {
+      id: '/_pathlessLayout/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof PathlessLayoutIndexImport
+      parentRoute: typeof PathlessLayoutImport
+    }
+    '/_pathlessLayout/bands/create': {
+      id: '/_pathlessLayout/bands/create'
       path: '/create'
       fullPath: '/bands/create'
-      preLoaderRoute: typeof BandsCreateImport
-      parentRoute: typeof BandsImport
+      preLoaderRoute: typeof PathlessLayoutBandsCreateImport
+      parentRoute: typeof PathlessLayoutBandsImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface BandsRouteChildren {
-  BandsCreateRoute: typeof BandsCreateRoute
+interface PathlessLayoutBandsRouteChildren {
+  PathlessLayoutBandsCreateRoute: typeof PathlessLayoutBandsCreateRoute
 }
 
-const BandsRouteChildren: BandsRouteChildren = {
-  BandsCreateRoute: BandsCreateRoute,
+const PathlessLayoutBandsRouteChildren: PathlessLayoutBandsRouteChildren = {
+  PathlessLayoutBandsCreateRoute: PathlessLayoutBandsCreateRoute,
 }
 
-const BandsRouteWithChildren = BandsRoute._addFileChildren(BandsRouteChildren)
+const PathlessLayoutBandsRouteWithChildren =
+  PathlessLayoutBandsRoute._addFileChildren(PathlessLayoutBandsRouteChildren)
+
+interface PathlessLayoutRouteChildren {
+  PathlessLayoutBandsRoute: typeof PathlessLayoutBandsRouteWithChildren
+  PathlessLayoutIndexRoute: typeof PathlessLayoutIndexRoute
+}
+
+const PathlessLayoutRouteChildren: PathlessLayoutRouteChildren = {
+  PathlessLayoutBandsRoute: PathlessLayoutBandsRouteWithChildren,
+  PathlessLayoutIndexRoute: PathlessLayoutIndexRoute,
+}
+
+const PathlessLayoutRouteWithChildren = PathlessLayoutRoute._addFileChildren(
+  PathlessLayoutRouteChildren,
+)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/bands': typeof BandsRouteWithChildren
-  '/bands/create': typeof BandsCreateRoute
+  '': typeof PathlessLayoutRouteWithChildren
+  '/bands': typeof PathlessLayoutBandsRouteWithChildren
+  '/': typeof PathlessLayoutIndexRoute
+  '/bands/create': typeof PathlessLayoutBandsCreateRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/bands': typeof BandsRouteWithChildren
-  '/bands/create': typeof BandsCreateRoute
+  '/bands': typeof PathlessLayoutBandsRouteWithChildren
+  '/': typeof PathlessLayoutIndexRoute
+  '/bands/create': typeof PathlessLayoutBandsCreateRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/bands': typeof BandsRouteWithChildren
-  '/bands/create': typeof BandsCreateRoute
+  '/_pathlessLayout': typeof PathlessLayoutRouteWithChildren
+  '/_pathlessLayout/bands': typeof PathlessLayoutBandsRouteWithChildren
+  '/_pathlessLayout/': typeof PathlessLayoutIndexRoute
+  '/_pathlessLayout/bands/create': typeof PathlessLayoutBandsCreateRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/bands' | '/bands/create'
+  fullPaths: '' | '/bands' | '/' | '/bands/create'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/bands' | '/bands/create'
-  id: '__root__' | '/' | '/bands' | '/bands/create'
+  to: '/bands' | '/' | '/bands/create'
+  id:
+    | '__root__'
+    | '/_pathlessLayout'
+    | '/_pathlessLayout/bands'
+    | '/_pathlessLayout/'
+    | '/_pathlessLayout/bands/create'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  BandsRoute: typeof BandsRouteWithChildren
+  PathlessLayoutRoute: typeof PathlessLayoutRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  BandsRoute: BandsRouteWithChildren,
+  PathlessLayoutRoute: PathlessLayoutRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -123,22 +156,30 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
-        "/bands"
+        "/_pathlessLayout"
       ]
     },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/bands": {
-      "filePath": "bands.tsx",
+    "/_pathlessLayout": {
+      "filePath": "_pathlessLayout.tsx",
       "children": [
-        "/bands/create"
+        "/_pathlessLayout/bands",
+        "/_pathlessLayout/"
       ]
     },
-    "/bands/create": {
-      "filePath": "bands/create.tsx",
-      "parent": "/bands"
+    "/_pathlessLayout/bands": {
+      "filePath": "_pathlessLayout/bands.tsx",
+      "parent": "/_pathlessLayout",
+      "children": [
+        "/_pathlessLayout/bands/create"
+      ]
+    },
+    "/_pathlessLayout/": {
+      "filePath": "_pathlessLayout/index.tsx",
+      "parent": "/_pathlessLayout"
+    },
+    "/_pathlessLayout/bands/create": {
+      "filePath": "_pathlessLayout/bands/create.tsx",
+      "parent": "/_pathlessLayout/bands"
     }
   }
 }

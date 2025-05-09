@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, varchar, boolean, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, varchar, boolean, integer, jsonb } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
 					id: text('id').primaryKey(),
@@ -51,3 +51,43 @@ export const testTable = pgTable("test", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: varchar({ length: 255 }).notNull(),
 });
+
+export const venue = pgTable("venue", {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  description: text('description'),
+  staff: jsonb('staff').$type<string[]>(), // Array of user IDs
+  addressLine1: text('address_line_1').notNull(),
+  addressLine2: text('address_line_2'),
+  city: text('city').notNull(),
+  state: text('state').notNull(),
+  zip: text('zip').notNull(),
+  country: text('country').notNull(),
+  createdAt: timestamp('created_at').notNull(),
+  updatedAt: timestamp('updated_at').notNull()
+});
+
+export const band = pgTable("band", {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  members: jsonb('members').$type<string[]>(), // Array of user IDs
+  mainContactId: text('main_contact_id').notNull().references(() => user.id),
+  contactPhone: text('contact_phone'),
+  contactEmail: text('contact_email'),
+  createdAt: timestamp('created_at').notNull(),
+  updatedAt: timestamp('updated_at').notNull()
+});
+
+export const event = pgTable("event", {
+  id: text('id').primaryKey(),
+  venueId: text('venue_id').notNull().references(() => venue.id),
+  startTime: timestamp('start_time').notNull(),
+  endTime: timestamp('end_time').notNull(),
+  bands: jsonb('bands').$type<string[]>(), // Array of band IDs
+  createdAt: timestamp('created_at').notNull(),
+  updatedAt: timestamp('updated_at').notNull()
+});
+
+
+
+

@@ -1,9 +1,9 @@
   import * as fs from 'node:fs'
 import { createFileRoute } from '@tanstack/react-router'
-import { signUp } from '../lib/auth-client'
+import { signUp } from '../../lib/auth-client'
 
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute('/_pathlessLayout/')({
   component: Home,
 })
 
