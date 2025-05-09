@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/bands')({
+export const Route = createFileRoute('/_pathlessLayout/bands/create')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  return <div>Hello "/bands"!</div>
+  return <div>Hello "/bands/create"!</div>
 }
