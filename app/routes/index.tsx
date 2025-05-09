@@ -21,8 +21,11 @@ function Home() {
   }
 
   return (
-    <button onClick={handleClick}>
-      Click me
-    </button>
+    <div>
+      <h1 className="text-2xl">Hello World</h1>
+      <button onClick={handleClick}>
+        Click me
+      </button>
+    </div>
   )
 }
