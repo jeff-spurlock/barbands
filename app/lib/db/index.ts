@@ -7,7 +7,7 @@ import { testTable } from './schema';
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL!,
 });
-const db = drizzle({ client: pool });
+export const db = drizzle({ client: pool });
 
 async function main() {
   const test: typeof testTable.$inferInsert = {
@@ -17,4 +17,4 @@ async function main() {
   console.log('New user created!')
 
 }
-main();
+//main();
