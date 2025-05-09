@@ -220,7 +220,9 @@ const config = {
         "native": true
       }
     ],
-    "previewFeatures": [],
+    "previewFeatures": [
+      "driverAdapters"
+    ],
     "sourceFilePath": "/Users/jeffspurlock/projects/websites/barbands/prisma/schema.prisma",
     "isCustomOutput": true
   },
@@ -235,17 +237,18 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiZjEzMWMxN2UtMjIwNy00Y2ZmLTk3ZGItNDBlNTRmZjQyMWQ4IiwidGVuYW50X2lkIjoiNTg4ZTE2YzMyNDU4NmM5ZGM5YjBiMDEwZDI3OTIwYWRiYTAyOWVmYmFhZTdjYTk2ZjQwNzQ4N2RlOGZhNzBmYSIsImludGVybmFsX3NlY3JldCI6IjBkYzc1N2FhLTZiMDgtNDliMi04ZmQ4LWVmNTcwNWEzNWVmMyJ9.ESjfvCBMksw_ZcgHaj6hG3PAmlZ7g0lVAbfQH7dy85Y"
+        "value": null
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"./app/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id              String           @id @default(cuid())\n  name            String\n  email           String           @unique\n  emailVerified   Boolean          @default(false)\n  image           String?\n  createdAt       DateTime         @default(now())\n  updatedAt       DateTime         @updatedAt\n  accounts        Account[]\n  sessions        Session[]\n  bandMemberships BandMember[]\n  venueStaffRoles VenueStaffRole[]\n}\n\nmodel Account {\n  id                    String    @id @default(cuid())\n  accountId             String\n  providerId            String\n  userId                String\n  accessToken           String?\n  refreshToken          String?\n  idToken               String?\n  accessTokenExpiresAt  DateTime?\n  refreshTokenExpiresAt DateTime?\n  scope                 String?\n  password              String?\n  createdAt             DateTime  @default(now())\n  updatedAt             DateTime  @updatedAt\n  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@unique([providerId, accountId])\n}\n\nmodel Session {\n  id        String   @id @default(cuid())\n  expiresAt DateTime\n  token     String   @unique\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n  ipAddress String?\n  userAgent String?\n  userId    String\n  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n}\n\nmodel Verification {\n  id         String   @id @default(cuid())\n  identifier String\n  value      String\n  expiresAt  DateTime\n  createdAt  DateTime @default(now())\n  updatedAt  DateTime @updatedAt\n}\n\nmodel Band {\n  id      Int          @id @default(autoincrement())\n  name    String\n  members BandMember[]\n}\n\nmodel Venue {\n  id       Int              @id @default(autoincrement())\n  name     String\n  address  String\n  address2 String?\n  city     String\n  state    String\n  zip      String\n  country  String\n  phone    String?\n  email    String\n  staff    VenueStaffRole[]\n}\n\nmodel BandMember {\n  id     Int    @id @default(autoincrement())\n  user   User   @relation(fields: [userId], references: [id])\n  userId String\n  band   Band   @relation(fields: [bandId], references: [id])\n  bandId Int\n\n  @@unique([userId, bandId])\n}\n\nmodel VenueStaffRole {\n  id      Int    @id @default(autoincrement())\n  user    User   @relation(fields: [userId], references: [id])\n  userId  String\n  venue   Venue  @relation(fields: [venueId], references: [id])\n  venueId Int\n  role    String\n\n  @@unique([userId, venueId])\n}\n",
-  "inlineSchemaHash": "9a0fc5241be7d9a9662b1cca3888b7632f38a6e514a5d411c35f19f43c219622",
-  "copyEngine": false
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider        = \"prisma-client-js\"\n  output          = \"./app/generated/prisma\"\n  previewFeatures = [\"driverAdapters\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id              String           @id @default(cuid())\n  name            String\n  email           String           @unique\n  emailVerified   Boolean          @default(false)\n  image           String?\n  createdAt       DateTime         @default(now())\n  updatedAt       DateTime         @updatedAt\n  accounts        Account[]\n  sessions        Session[]\n  bandMemberships BandMember[]\n  venueStaffRoles VenueStaffRole[]\n}\n\nmodel Account {\n  id                    String    @id @default(cuid())\n  accountId             String\n  providerId            String\n  userId                String\n  accessToken           String?\n  refreshToken          String?\n  idToken               String?\n  accessTokenExpiresAt  DateTime?\n  refreshTokenExpiresAt DateTime?\n  scope                 String?\n  password              String?\n  createdAt             DateTime  @default(now())\n  updatedAt             DateTime  @updatedAt\n  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@unique([providerId, accountId])\n}\n\nmodel Session {\n  id        String   @id @default(cuid())\n  expiresAt DateTime\n  token     String   @unique\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n  ipAddress String?\n  userAgent String?\n  userId    String\n  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n}\n\nmodel Verification {\n  id         String   @id @default(cuid())\n  identifier String\n  value      String\n  expiresAt  DateTime\n  createdAt  DateTime @default(now())\n  updatedAt  DateTime @updatedAt\n}\n\nmodel Band {\n  id      Int          @id @default(autoincrement())\n  name    String\n  members BandMember[]\n}\n\nmodel Venue {\n  id       Int              @id @default(autoincrement())\n  name     String\n  address  String\n  address2 String?\n  city     String\n  state    String\n  zip      String\n  country  String\n  phone    String?\n  email    String\n  staff    VenueStaffRole[]\n}\n\nmodel BandMember {\n  id     Int    @id @default(autoincrement())\n  user   User   @relation(fields: [userId], references: [id])\n  userId String\n  band   Band   @relation(fields: [bandId], references: [id])\n  bandId Int\n\n  @@unique([userId, bandId])\n}\n\nmodel VenueStaffRole {\n  id      Int    @id @default(autoincrement())\n  user    User   @relation(fields: [userId], references: [id])\n  userId  String\n  venue   Venue  @relation(fields: [venueId], references: [id])\n  venueId Int\n  role    String\n\n  @@unique([userId, venueId])\n}\n",
+  "inlineSchemaHash": "badf7c741ec839fd7364dcdb6339de60e4567e22b1f74353ccbc893c9a324b75",
+  "copyEngine": true
 }
 
 const fs = require('fs')
@@ -282,3 +285,9 @@ const PrismaClient = getPrismaClient(config)
 exports.PrismaClient = PrismaClient
 Object.assign(exports, Prisma)
 
+// file annotations for bundling tools to include these files
+path.join(__dirname, "libquery_engine-darwin-arm64.dylib.node");
+path.join(process.cwd(), "prisma/app/generated/prisma/libquery_engine-darwin-arm64.dylib.node")
+// file annotations for bundling tools to include these files
+path.join(__dirname, "schema.prisma");
+path.join(process.cwd(), "prisma/app/generated/prisma/schema.prisma")

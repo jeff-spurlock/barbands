@@ -5,6 +5,14 @@ export function createRouter() {
   const router = createTanStackRouter({
     routeTree,
     scrollRestoration: true,
+    defaultPreload: 'intent',
+    defaultPreloadStaleTime: 0,
+    defaultErrorComponent: ({ error }) => (
+      <div>
+        <h1>Error</h1>
+        <pre>{error.message}</pre>
+      </div>
+    ),
   })
 
   return router
