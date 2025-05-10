@@ -30,7 +30,7 @@ export function NavDrawer() {
       <DrawerTrigger asChild>
         <Button
           variant="ghost"
-          className="gap-4 px-0 m-2 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+          className="gap-4 p-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
         >
            <Menu className="size-6" />
           <span className="sr-only">Toggle Menu</span>
