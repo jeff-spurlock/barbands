@@ -6,8 +6,8 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { createContext, useContext, useEffect, useState } from "react"
 import { Carousel, CarouselApi, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, LoginCarouselItem } from "../ui/carousel"
-import { isUndefined } from "util"
 import { Card, CardHeader, CardTitle } from "../ui/card"
+import { signIn, signUp, useSession } from "@/lib/auth-client"
 
 const LogInFormSchema = z.object({
   logInEmail: z.string().email({ message: "Invalid email address" }),
@@ -43,12 +43,8 @@ export const LogInForm = () => {
   ];
   const onSubmit = async (data: z.infer<typeof LogInFormSchema>) => {
     console.log("log in data", data)
-    const response = await fetch("/api/test", {
-      method: "POST",
-      body: JSON.stringify(data),
-    })
-    const responseData = await response.json()
-    console.log("response", responseData)
+    signIn.email({ email: data.logInEmail, password: data.logInPassword })
+    
   }
   return (
     <FormTemplate<z.infer<typeof LogInFormSchema>> onSubmit={onSubmit} form={loginForm} fields={logInFields} />
@@ -72,13 +68,7 @@ export const SignUpForm = () => {
     { name: "signUpConfirmPassword", label: "Confirm Password", type: "password" },
   ];
   async function onSubmit(data: z.infer<typeof SignUpFormSchema>){
-    console.log("sign up data", data)
-    const response = await fetch("/api/test", {
-      method: "POST",
-      body: JSON.stringify(data),
-    })
-    const responseData = await response.json()
-    console.log("response", responseData)
+    signUp.email({ email: data.signUpEmail, password: data.signUpPassword, name: data.signUpName })
   }
   return (
     <FormTemplate<z.infer<typeof SignUpFormSchema>> onSubmit={onSubmit} form={signUpForm} fields={signUpFields} />
