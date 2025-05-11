@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as PathlessLayoutImport } from './routes/_pathlessLayout'
 import { Route as PathlessLayoutIndexImport } from './routes/_pathlessLayout/index'
 import { Route as PathlessLayoutBandsImport } from './routes/_pathlessLayout/bands'
+import { Route as PathlessLayoutAccountIndexImport } from './routes/_pathlessLayout/account/index'
 import { Route as PathlessLayoutBandsCreateImport } from './routes/_pathlessLayout/bands/create'
 
 // Create/Update Routes
@@ -34,6 +35,14 @@ const PathlessLayoutBandsRoute = PathlessLayoutBandsImport.update({
   path: '/bands',
   getParentRoute: () => PathlessLayoutRoute,
 } as any)
+
+const PathlessLayoutAccountIndexRoute = PathlessLayoutAccountIndexImport.update(
+  {
+    id: '/account/',
+    path: '/account/',
+    getParentRoute: () => PathlessLayoutRoute,
+  } as any,
+)
 
 const PathlessLayoutBandsCreateRoute = PathlessLayoutBandsCreateImport.update({
   id: '/create',
@@ -73,6 +82,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PathlessLayoutBandsCreateImport
       parentRoute: typeof PathlessLayoutBandsImport
     }
+    '/_pathlessLayout/account/': {
+      id: '/_pathlessLayout/account/'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof PathlessLayoutAccountIndexImport
+      parentRoute: typeof PathlessLayoutImport
+    }
   }
 }
 
@@ -92,11 +108,13 @@ const PathlessLayoutBandsRouteWithChildren =
 interface PathlessLayoutRouteChildren {
   PathlessLayoutBandsRoute: typeof PathlessLayoutBandsRouteWithChildren
   PathlessLayoutIndexRoute: typeof PathlessLayoutIndexRoute
+  PathlessLayoutAccountIndexRoute: typeof PathlessLayoutAccountIndexRoute
 }
 
 const PathlessLayoutRouteChildren: PathlessLayoutRouteChildren = {
   PathlessLayoutBandsRoute: PathlessLayoutBandsRouteWithChildren,
   PathlessLayoutIndexRoute: PathlessLayoutIndexRoute,
+  PathlessLayoutAccountIndexRoute: PathlessLayoutAccountIndexRoute,
 }
 
 const PathlessLayoutRouteWithChildren = PathlessLayoutRoute._addFileChildren(
@@ -108,12 +126,14 @@ export interface FileRoutesByFullPath {
   '/bands': typeof PathlessLayoutBandsRouteWithChildren
   '/': typeof PathlessLayoutIndexRoute
   '/bands/create': typeof PathlessLayoutBandsCreateRoute
+  '/account': typeof PathlessLayoutAccountIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/bands': typeof PathlessLayoutBandsRouteWithChildren
   '/': typeof PathlessLayoutIndexRoute
   '/bands/create': typeof PathlessLayoutBandsCreateRoute
+  '/account': typeof PathlessLayoutAccountIndexRoute
 }
 
 export interface FileRoutesById {
@@ -122,19 +142,21 @@ export interface FileRoutesById {
   '/_pathlessLayout/bands': typeof PathlessLayoutBandsRouteWithChildren
   '/_pathlessLayout/': typeof PathlessLayoutIndexRoute
   '/_pathlessLayout/bands/create': typeof PathlessLayoutBandsCreateRoute
+  '/_pathlessLayout/account/': typeof PathlessLayoutAccountIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/bands' | '/' | '/bands/create'
+  fullPaths: '' | '/bands' | '/' | '/bands/create' | '/account'
   fileRoutesByTo: FileRoutesByTo
-  to: '/bands' | '/' | '/bands/create'
+  to: '/bands' | '/' | '/bands/create' | '/account'
   id:
     | '__root__'
     | '/_pathlessLayout'
     | '/_pathlessLayout/bands'
     | '/_pathlessLayout/'
     | '/_pathlessLayout/bands/create'
+    | '/_pathlessLayout/account/'
   fileRoutesById: FileRoutesById
 }
 
@@ -163,7 +185,8 @@ export const routeTree = rootRoute
       "filePath": "_pathlessLayout.tsx",
       "children": [
         "/_pathlessLayout/bands",
-        "/_pathlessLayout/"
+        "/_pathlessLayout/",
+        "/_pathlessLayout/account/"
       ]
     },
     "/_pathlessLayout/bands": {
@@ -180,6 +203,10 @@ export const routeTree = rootRoute
     "/_pathlessLayout/bands/create": {
       "filePath": "_pathlessLayout/bands/create.tsx",
       "parent": "/_pathlessLayout/bands"
+    },
+    "/_pathlessLayout/account/": {
+      "filePath": "_pathlessLayout/account/index.tsx",
+      "parent": "/_pathlessLayout"
     }
   }
 }

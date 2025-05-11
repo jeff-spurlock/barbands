@@ -7,5 +7,15 @@ export const APIRoute = createAPIFileRoute('/api/test')({
         'Content-Type': 'application/json'
       }
     })
+  },
+  POST: async ({ request }) => {
+    const body = await request.json()
+    console.log("request body", body)
+    return new Response(JSON.stringify({ message: 'Hello "/api/test"!' }), {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
   }
 })
+
