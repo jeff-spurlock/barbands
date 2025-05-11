@@ -2,8 +2,8 @@ import { FC, useState } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { User } from "lucide-react";
 import { Button } from "../ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
-import { LogInOrSignUpForm } from "./log-in-form";
+import { AccountDialogContent, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { AccountCarousel } from "./AccountCarousel";
 import { useForm } from "react-hook-form";
 
 const UserControls: FC = () => {
@@ -21,14 +21,12 @@ const UserControls: FC = () => {
           <DropdownMenuItem>My Venues</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <DialogContent>
+      <AccountDialogContent>
         <DialogHeader>
-          <DialogTitle>Log In</DialogTitle>
-          <DialogDescription>
-            <LogInOrSignUpForm />
-          </DialogDescription>
+          <span className="sr-only"><DialogTitle>Your Account</DialogTitle></span>
         </DialogHeader>
-      </DialogContent>
+        <AccountCarousel />
+      </AccountDialogContent>
     </Dialog>
   );
 };
